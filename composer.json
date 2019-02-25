@@ -1,44 +1,45 @@
 {
-  "name": "johnpbloch/wordpress",
-  "description": "WordPress is web software you can use to create a beautiful website or blog.",
-  "keywords": [
-    "wordpress",
-    "blog",
-    "cms"
-  ],
-  "type": "package",
-  "homepage": "http://wordpress.org/",
-  "license": "GPL-2.0+",
-  "authors": [
-    {
-      "name": "WordPress Community",
-      "homepage": "http://wordpress.org/about/"
-    }
-  ],
-  "support": {
-    "issues": "http://core.trac.wordpress.org/",
-    "forum": "http://wordpress.org/support/",
-    "wiki": "http://codex.wordpress.org/",
-    "irc": "irc://irc.freenode.net/wordpress",
-    "source": "http://core.trac.wordpress.org/browser"
-  },
-  "require": {
-    "php": ">=5.3.2",
-    "johnpbloch/wordpress-core-installer": "^1.0",
-    "johnpbloch/wordpress-core": "5.0.3"
-  },
-  "extra": {
-    "wordpress-install-dir": "web/wp",
-    "installer-paths": {
-      "web/wp-content/plugins/{$name}": [
-        "type:wordpress-plugin"
+    "name": "platformsh/template-wordpress",
+    "description": "WordPress Composer-ified. A template for managing WordPress core, plugins, and themes.",
+    "keywords": [
+        "wordpress",
+        "blog",
+        "cms",
+        "template"
+    ],
+    "homepage": "https://github.com/platformsh/template-wordpress",
+    "type": "project",
+    "license": "GPL-2.0-or-later",
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://wpackagist.org"
+        }
+    ],
+    "require": {
+        "johnpbloch/wordpress": "^5.0"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "discard-changes": true,
+        "sort-packages": true
+    },
+    "scripts": {
+      "update-packages": [
+          "cp -rf wp/* web/",
+          "rm -rf wp"
       ],
-      "web/wp-content/themes/{$name}": [
-        "type:wordpress-theme"
-      ],
-      "web/wp-content/mu-plugins/{$name}": [
-        "type:wordpress-muplugin"
-      ]
+      "post-install-cmd": "@update-packages",
+      "post-update-cmd": "@update-packages"
+    },
+    "extra": {
+        "wordpress-install-dir": "wp",
+        "installer-paths": {
+            "web/wp-content/plugins/{$name}": ["type:wordpress-plugin"],
+            "web/wp-content/themes/{$name}": ["type:wordpress-theme"],
+            "web/wp-content/mu-plugins/{$name}": ["type:wordpress-muplugin"],
+            "web/wp-content/{$name}": "type:wordpress-dropin"
+        }
     }
-  }
 }
