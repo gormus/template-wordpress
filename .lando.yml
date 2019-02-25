@@ -1,0 +1,30 @@
+name: wordpress
+recipe: wordpress
+config:
+    webroot: web
+    via: nginx
+    database: mariadb
+    php: 7.2
+    xdebug: true
+
+services:
+    appserver:
+        run:
+            - /bin/sh -c "/app/.lando/scripts/local-config-files.sh"
+            - /bin/sh -c "/app/.lando/scripts/install-platformsh-cli.sh"
+            - /bin/sh -c "/app/.lando/scripts/git-clean.sh"
+            - cd /app && composer install
+
+tooling:
+    git-clean:
+        description: "Clean codebase. Removes untracked files from the working tree. Use with caution."
+        service: appserver
+        cmd: /bin/sh -c "/app/.lando/scripts/git-clean.sh"
+    platform:
+        description: "Run Platform.sh commands"
+        service: appserver
+        cmd: /var/www/.platformsh/bin/platform
+
+events:
+    post-db-import:
+        - appserver: /usr/local/bin/wp --allow-root cache flush
